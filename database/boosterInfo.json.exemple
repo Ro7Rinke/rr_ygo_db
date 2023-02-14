@@ -1,0 +1,16 @@
+{
+    "game": "Tag Force 1",
+    "name": "First Monster",
+    "cardsPerPack": 5,
+    "price": 100,
+    "unlockInfo": "Unlocked at the beginning",
+    "packNumber": 1,
+    "coverCard": "Blue-Eyes White Dragon",
+    "totalCards": 0,
+    "cards": {
+        "commons": [],
+        "rares": [],
+        "superRares": [],
+        "ultraRares": []
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "games": [
+        {
+            "name": "Tag Force 1",
+            "boosters": []
+        },
+        {
+            "name": "Tag Force 2",
+            "boosters": [
+                {"link": "/wiki/Beginner_Monsters_(GX04-BP)", "name": "Beginner Monsters", "price": 50, "unlockInfo": "At start"},
+                {"link": "/wiki/Beginner_Spells_(GX04-BP)", "name": "Beginner Spells", "price": 50, "unlockInfo": "At start"},
+                {"link": "/wiki/Beginner_Traps_(GX04-BP)", "name": "Beginner Traps", "price": 50, "unlockInfo": "At start"},
+                {"link": "/wiki/Time_to_Gear_Up_(GX04-BP)", "name": "Time to Gear Up", "price": 100, "unlockInfo": "Get 50% on Beginner Monsters/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Intermediate_Spells_(GX04-BP)", "name": "Intermediate Spells", "price": 100, "unlockInfo": "Get 50% on Beginner Spells/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Intermediate_Traps_(GX04-BP)", "name": "Intermediate Traps", "price": 100, "unlockInfo": "Get 50% on Beginner Traps/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/It%27s_Fusion_Time_(GX04-BP)", "name": "It's Fusion Time", "price": 150, "unlockInfo": "Get 50% on Time to Gear Up/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Expert_Spells_(GX04-BP)", "name": "Expert Spells", "price": 150, "unlockInfo": "Get 50% on Intermediate Spells/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Expert_Traps_(GX04-BP)", "name": "Expert Traps", "price": 150, "unlockInfo": "Get 50% on It's Fusion Time/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Creeping_Darkness_(GX04-BP)", "name": "Creeping Darkness", "price": 100, "unlockInfo": "Unlock at first Monday/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Dueling_with_Fire_(GX04-BP)", "name": "Dueling with Fire", "price": 100, "unlockInfo": "Unlock at first Tuesday/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Raging_Waters_(GX04-BP)", "name": "Raging Waters", "price": 100, "unlockInfo": "Unlock at first Wednesday/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/A_Gust_of_Wind_(GX04-BP)", "name": "A Gust of Wind", "price": 100, "unlockInfo": "Unlock at first Thursday/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Light_from_Above_(GX04-BP)", "name": "Light from Above", "price": 100, "unlockInfo": "Unlock at first Friday/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Earthly_Powers_(GX04-BP)", "name": "Earthly Powers", "price": 100, "unlockInfo": "Unlock at first Saturday/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Taste_the_Attributes_(GX04-BP)", "name": "Taste the Attributes", "price": 150, "unlockInfo": "10% chance of unlocking each day/80% complete on P10-15/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Power_of_the_Heroes_(GX04-BP)", "name": "Power of the Heroes", "price": 100, "unlockInfo": "Tag with Jaden/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Machiner%27s_Force_(GX04-BP)", "name": "Machiner's Force", "price": 100, "unlockInfo": "Tag with Syrus/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Cyber_Girl_Rhapsody_(GX04-BP)", "name": "Cyber Girl Rhapsody", "price": 100, "unlockInfo": "Tag with Alexis/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Ojama_Strike_(GX04-BP)", "name": "Ojama Strike", "price": 100, "unlockInfo": "Tag with Chazz/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Control_Your_Destiny_(GX04-BP)", "name": "Control Your Destiny", "price": 100, "unlockInfo": "Tag with Aster/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Dino_Power_(GX04-BP)", "name": "Dino Power", "price": 100, "unlockInfo": "Tag with Tyranno/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/A_Maiden%27s_Love_(GX04-BP)", "name": "A Maiden's Love", "price": 100, "unlockInfo": "Tag with Blair/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Over_the_Rainbow_(GX04-BP)", "name": "Over the Rainbow", "price": 100, "unlockInfo": "Tag with Jesse/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Making_the_Team_(GX04-BP)", "name": "Making the Team", "price": 100, "unlockInfo": "Tag with any characters in Tier 2/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Simple_is_Best_(GX04-BP)", "name": "Simple is Best", "price": 50, "unlockInfo": "Tag with any characters in Tier 3/Level 45/Clear game with all characters in Tier 1"},
+                {"link": "/wiki/Test_of_Luck_(GX04-BP)", "name": "Test of Luck", "price": 150, "unlockInfo": "Clear the Destiny 21 mini-game with 50000 points/Clear the game with all Page 1 characters/Reach at least to Level 40"},
+                {"link": "/wiki/Dramatic_a_La_Carte_(GX04-BP)", "name": "Dramatic a La Carte", "price": 150, "unlockInfo": "Clear the Survival Dodgeball mini-game with 100000 points/Clear the game with all Page 1 characters/Reach at least to Level 40"},
+                {"link": "/wiki/Vanilla_Flavored_(GX04-BP)", "name": "Vanilla Flavored", "price": 150, "unlockInfo": "Clear the Can you Make 400 Friends mini-game/Clear the game with all Page 1 characters/Reach at least to Level 40"},
+                {"link": "/wiki/Reserve_Magic_(GX04-BP)", "name": "Reserve Magic", "price": 150, "unlockInfo": "Clear the Stones of Strategy mini-game with 50000 points/Clear the game with all Page 1 characters/Reach at least to Level 40"},
+                {"link": "/wiki/A_Fresh,_New_Taste_(GX04-BP)", "name": "A Fresh, New Taste", "price": 150, "unlockInfo": "Clear the Visitor from the Abyss mini-game by reaching at least 50 floors/Clear the game with all Page 1 characters/Reach at least to Level 40"},
+                {"link": "/wiki/Magic_Carpet_(GX04-BP)", "name": "Magic Carpet", "price": 100, "unlockInfo": "Clear the game with one Page 1 character/Complete 20% of the Challenges"},
+                {"link": "/wiki/A_Dragon%27s_Tale_(GX04-BP)", "name": "A Dragon's Tale", "price": 100, "unlockInfo": "Clear the game with two Page 1 characters/Complete 40% of the Challenges"},
+                {"link": "/wiki/Back_for_More_(GX04-BP)", "name": "Back for More", "price": 100, "unlockInfo": "Clear the game with three Page 1 characters/Complete 60% of the Challenges"},
+                {"link": "/wiki/Twilight_Ruler_(GX04-BP)", "name": "Twilight Ruler", "price": 100, "unlockInfo": "Clear the game with four Page 1 characters/Complete 80% of the Challenges"},
+                {"link": "/wiki/Celestial_Sign_(GX04-BP)", "name": "Celestial Sign", "price": 100, "unlockInfo": "Clear the game with five Page 1 characters/Win the Slifer Red Tournament"},
+                {"link": "/wiki/Banner_of_Courage_(GX04-BP)", "name": "Banner of Courage", "price": 100, "unlockInfo": "Clear the game with six Page 1 characters/Win the Ra Yellow Tournament"},
+                {"link": "/wiki/Don%27t_Stop!_(GX04-BP)", "name": "Don't Stop!", "price": 100, "unlockInfo": "Clear the game with seven Page 1 characters/Win the Obelisk Blue Tournament"},
+                {"link": "/wiki/Spice_Up_Your_Deck_(GX04-BP)", "name": "Spice Up Your Deck", "price": 100, "unlockInfo": "Clear the game with all Page 1 characters/Win the Championship Tournament"},
+                {"link": "/wiki/Rock_Solid_Tactics_(GX04-BP)", "name": "Rock Solid Tactics", "price": 100, "unlockInfo": "Clear the game with any Page 2 character/Clear the game with all Page 1 characters/Complete 20% of the Challenges"},
+                {"link": "/wiki/A_Bug%27s_Deal_(GX04-BP)", "name": "A Bug's Deal", "price": 100, "unlockInfo": "Clear the game with any Page 3 character/Clear the game with all Page 1 characters/Complete 20% of the Challenges"},
+                {"link": "/wiki/Sadie%27s_Special_Pack_(GX04-BP)", "name": "Sadie's Special Pack", "price": 200, "unlockInfo": "Clear the game with Sadie/Game time of at least 50 hours"},
+                {"link": "/wiki/Ms._Dorothy%27s_Special_Pack_(GX04-BP)", "name": "Ms. Dorothy's Special Pack", "price": 200, "unlockInfo": "Clear the game with Dorothy/Buy at least 1000 packs"},
+                {"link": "/wiki/Champion%27s_Pack_(GX04-BP)", "name": "Champion's Pack", "price": 50, "unlockInfo": "Clear the game with all Page 1 characters"},
+                {"link": "/wiki/Crush_on_You_(GX04-BP)", "name": "Crush on You", "price": 50, "unlockInfo": "Insert Yu-Gi-Oh Tag Force 1 disc in UMD Recognition"},
+                {"link": "/wiki/Midday_Constellation_(GX04-BP)", "name": "Midday Constellation", "price": 573, "unlockInfo": "Up Up Down Down Left Right Left Right X O at the Card Shop screen"},
+                {"link": "/wiki/Double_Triple_Destiny_Draw_(GX04-BP)", "name": "Double Triple Destiny Draw", "price": 200, "unlockInfo": "Acquire the Golden Egg Sandwich/Acquire the Pot of Greed card/Clear the game with all Page 1 characters"},
+                {"link": "/wiki/Checkered_Flag_(GX04-BP)", "name": "Checkered Flag", "price": 300, "unlockInfo": "Acquire at least 95% of all cards"}
+            ]
+        }
+    ]
+}
