@@ -1,6 +1,16 @@
 const fs = require('fs')
 const axios = require('axios')
 const gameInfo = require('../gameInfo.json')
+const getCards = require('../addCards/getCards')
+
+const domain = `https://yugioh.fandom.com`
+
+
+let logs = []
+
+const logToFile = () => {
+    fs.writeFileSync('./logs.log', logs.join('\n'))
+}
 
 var getFromBetween = {
     results:[],
@@ -52,7 +62,7 @@ const getBoosterLinks = async (link) => {
     const pageArray = page.split('\n')
     
     const linkLines = pageArray.filter(line => ((typeof line == 'string') && (line.includes('<ul><li><a href=') && line.includes('</li></ul>'))))
-    console.log(linkLines.length)
+    return linkLines
 }
 
 const getPageLines = async (boosterLink) => {
@@ -101,8 +111,6 @@ const generateCardsInfo = (cardLines) => {
 }
 
 const web = async () => {
-
-    const domain = `https://yugioh.fandom.com`
 
     let info = {
         boosters: []
@@ -305,23 +313,61 @@ const getCardInfoSpecial = (info) => {
     + info.boosters[indexFlag].cards.commons.length
 }
 
-const main = async () => {
+const generateInfo = async () => {
+    let boosters = []
+    
+    for(const game of gameInfo.games){
+        let packNumber = 1
+        for(const boosterInfo of game.boosters){
+            console.log(boosterInfo.name)
+            const cards = await getCards(`${domain}${boosterInfo.link}`)
 
-    const text = fs.readFileSync('../TagForce1.txt', {encoding: 'utf-8'}).replaceAll('\r', '')
-
-    const {textBooster, textCards} = splitTexts(text)
-
-    const boosterLines = textBooster.split('\n')
-
-    let info = {
-        boosters: getInfoFromBoosterLines(boosterLines)
+            let booster = {
+                name: boosterInfo.name,
+                game: game.name,
+                unlockInfo: boosterInfo.unlockInfo,
+                price: boosterInfo.price,
+                cardsPerPack: boosterInfo.cardsPerPack ? boosterInfo.cardsPerPack : 0,
+                totalCards: cards.ultraRares.length + cards.superRares.length + cards.rares.length + cards.commons.length,
+                packNumber,
+                cards
+            }
+            if(booster.totalCards == 0){
+                logs.push(`${booster.name} - ${boosterInfo.link}`)
+            }
+            boosters.push(booster)
+            packNumber++
+        }
     }
 
-    getCardInfo(textCards, info)
+    return boosters
+}
 
-    getCardInfoSpecial(info)
+const main = async () => {
 
-    fs.writeFileSync('../Info.json', JSON.stringify(info))
+    // const text = fs.readFileSync('../TagForce1.txt', {encoding: 'utf-8'}).replaceAll('\r', '')
+
+    // const {textBooster, textCards} = splitTexts(text)
+
+    // const boosterLines = textBooster.split('\n')
+
+    // let info = {
+    //     boosters: getInfoFromBoosterLines(boosterLines)
+    // }
+
+    // getCardInfo(textCards, info)
+
+    // getCardInfoSpecial(info)
+
+    // fs.writeFileSync('../Info.json', JSON.stringify(info))
+
+    let info = {
+        boosters: await generateInfo()
+    }
+
+    fs.writeFileSync('../info.json', JSON.stringify(info))
+    
+    logToFile()
 }
 
 main()

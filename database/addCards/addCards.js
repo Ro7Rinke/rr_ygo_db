@@ -11,7 +11,12 @@ const pgConfig = {
     database: 'rr_ygo_db_dev',
     port: 5432
 }
-// const toArray = require('../../src/common/toArray')
+
+let logs = []
+
+const logToFile = () => {
+    fs.writeFileSync('./logs.log', logs.join('\n'))
+}
 
 const toArray = (object = {}) => {
     let array = []
@@ -167,44 +172,43 @@ const getCardYGO = async (cardName) => {
             db.get(sql, params, (error, row) => {
                 if(error){
                     console.log(error)
-                    // reject(error)
+                    reject(error)
                 }else if(row){
                     resolve(row)
                 }else{
+                    logs.push(`${cardName} - Não achou.`)
                     reject(`can't find card: ${cardName}`)
-                    console.log(sql, params)
-                    console.log(cardName, ' - Não achou')
                 }
             })
         }catch(error){
-            // console.log(error)
+            console.log(error)
         }
     })
 }
 
 const getCardId = async (cardName) => {
-    let cardId = null//await getCardIdRRYGODB(cardName)
+    let cardId = await getCardIdRRYGODB(cardName)
     if(!cardId){
         try {
-            
-        const cardYgo = await getCardYGO(cardName)
+            const cardYgo = await getCardYGO(cardName)
+            if(cardYgo){
+                cardId = short.generate()
+                await insertCard({
+                    id: cardId,
+                    ygoId: cardYgo.id,
+                    name: cardYgo.name,
+                    alias: cardName,
+                    picUrl: ''
+                    //text: cardYgo.text
+                })
+            }
+            // else{
+            //     console.log("can't find card - ", cardName)
+            // }
+
         } catch (error) {
-            
+            console.log(error)
         }
-        
-        // if(cardYgo){
-        //     cardId = short.generate()
-        //     await insertCard({
-        //         id: cardId,
-        //         ygoId: cardYgo.id,
-        //         name: cardYgo.name,
-        //         alias: cardName,
-        //         picUrl: ''
-        //         //text: cardYgo.text
-        //     })
-        // }else{
-        //     console.log("can't find card - ", cardName)
-        // }
     }
     return cardId
 }
@@ -280,20 +284,28 @@ const insertBoostersInfo = async () => {
     }
 }
 
-const main = async () => {
+const addCard = async () => {
     for(const booster of boosterInfo.boosters){
         for(const key in booster.cards){
             for(const cardName of booster.cards[key]){
                 try{
-                    await getCardId(cardName)
+                    await getCardYGO(cardName)
                 }catch(error){
-
+                    // console.log(error)
                 }
             }
         }
     }
-    // insertBoostersInfo()
 
+    // insertBoostersInfo()
+    
+    console.log(logs.length)
+    logToFile()
 }
 
-main()
+addCard()
+
+module.exports = {
+    getCardYGO,
+    addCard,
+}
