@@ -44,6 +44,9 @@ const getCards = async (boosterLink) => {
                 case 'Common':
                     selectedKey = 'commons'
                     break
+                case 'Cards':
+                    selectedKey = 'commons'
+                    break
             }
         }else if($(element).is('ul')){
             $(element).children().each((indexCard, cardLi) => {
