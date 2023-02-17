@@ -3,6 +3,10 @@ const sqlite3 = require('sqlite3').verbose()
 const short = require('short-uuid');
 const boosterInfo = require('../info.json')
 const { Client } = require('pg')
+const { getCardNameFromWiki } = require('./getCards')
+// const { parseLinkName } = require('../webScraping/getImageFromWiki')
+
+const domain = `https://yugioh.fandom.com`
 
 const pgConfig = {
     user: 'postgres',
@@ -109,7 +113,7 @@ const getCardIdRRYGODB = async (cardName) => {
     const client = new Client(pgConfig)
     await client.connect()
 
-    let sql = `SELECT id FROM card WHERE name like $1`
+    let sql = `SELECT id FROM card WHERE name like $1 or alias like $1`
     let params = [cardName]
 
     const {rows} = await client.query(sql, params)
@@ -169,15 +173,26 @@ const getCardYGO = async (cardName) => {
     
             let sql = `SELECT d.*, t.* from datas d inner join texts t on d.id = t.id where t.name like (?)`
             let params = [cardName]
-            db.get(sql, params, (error, row) => {
+            db.get(sql, params, async (error, row) => {
                 if(error){
                     console.log(error)
                     reject(error)
                 }else if(row){
                     resolve(row)
                 }else{
-                    logs.push(`${cardName} - Não achou.`)
-                    reject(`can't find card: ${cardName}`)
+                    const wikiName = await getCardNameFromWiki(`${domain}/wiki/${cardName}`)
+                    console.log(cardName, ' - ', wikiName)
+                    db.get(sql, [wikiName], (error, row) => {
+                        if(error){
+                            console.log(error)
+                            reject(error)
+                        }else if(row){
+                            resolve(row)
+                        }else{
+                            logs.push(`${cardName} - Não achou.`)
+                            reject(`can't find card: ${cardName}`)      
+                        }
+                    })
                 }
             })
         }catch(error){
@@ -255,7 +270,7 @@ const getGameId = (gameName) => {
 const insertBoostersInfo = async () => {
 
     for(const booster of boosterInfo.boosters){
-
+        console.log('Booster: ',booster.name)
         const boosterId = short.generate()
 
         await insertBooster({
@@ -285,19 +300,19 @@ const insertBoostersInfo = async () => {
 }
 
 const addCard = async () => {
-    for(const booster of boosterInfo.boosters){
-        for(const key in booster.cards){
-            for(const cardName of booster.cards[key]){
-                try{
-                    await getCardYGO(cardName)
-                }catch(error){
-                    // console.log(error)
-                }
-            }
-        }
-    }
+    // for(const booster of boosterInfo.boosters){
+    //     for(const key in booster.cards){
+    //         for(const cardName of booster.cards[key]){
+    //             try{
+    //                 await getCardYGO(cardName)
+    //             }catch(error){
+    //                 // console.log(error)
+    //             }
+    //         }
+    //     }
+    // }
 
-    // insertBoostersInfo()
+    await insertBoostersInfo()
     
     console.log(logs.length)
     logToFile()

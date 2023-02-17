@@ -1,7 +1,7 @@
 const fs = require('fs')
 const axios = require('axios')
 const gameInfo = require('../gameInfo.json')
-const getCards = require('../addCards/getCards')
+const { getCards } = require('../addCards/getCards')
 
 const domain = `https://yugioh.fandom.com`
 
@@ -10,6 +10,17 @@ let logs = []
 
 const logToFile = () => {
     fs.writeFileSync('./logs.log', logs.join('\n'))
+}
+
+const toArray = (object = {}) => {
+    let array = []
+    
+    for(const key in object){
+        if(object.hasOwnProperty(key))
+            array.push(object[key])
+    }
+    
+    return array
 }
 
 var getFromBetween = {
@@ -319,7 +330,7 @@ const generateInfo = async () => {
     for(const game of gameInfo.games){
         let packNumber = 1
         for(const boosterInfo of game.boosters){
-            console.log(boosterInfo.name, ' - ', packNumber, ' - ', game.name)
+            console.log(boosterInfo.name, ' - ', packNumber, ' - ', game.name, ' - ', boosterInfo.link)
             const cards = await getCards(`${domain}${boosterInfo.link}`)
 
             let booster = {
@@ -337,123 +348,144 @@ const generateInfo = async () => {
             boosters.push(booster)
             packNumber++
         }
+    }
 
-        //parse special boosters
+    //parse special boosters
 
-        for(const boosterIndex in boosters){
-            if(boosters[boosterIndex].name == 'Lucky Economy Pack'){
+    for(const boosterIndex in boosters){
+        if(boosters[boosterIndex].name == 'Lucky Economy Pack'){
 
-                const indexFire = boosters.findIndex(element => element.name = `Emergent Fire`)
-                const indexWater = boosters.findIndex(element => element.name = `Water of Life`)
-                const indexWind = boosters.findIndex(element => element.name = `Gift of Wind`)
-                const indexLight = boosters.findIndex(element => element.name = `Platinum Light`)
-                const indexEarth = boosters.findIndex(element => element.name = `Earth Dwellers`)
-                const indexDark = boosters.findIndex(element => element.name = `Visitor from the Dark`)
+            const indexFire = boosters.findIndex(element => element.name == `Emergent Fire`)
+            const indexWater = boosters.findIndex(element => element.name == `Water of Life`)
+            const indexWind = boosters.findIndex(element => element.name == `Gift of Wind`)
+            const indexLight = boosters.findIndex(element => element.name == `Platinum Light`)
+            const indexEarth = boosters.findIndex(element => element.name == `Earth Dwellers`)
+            const indexDark = boosters.findIndex(element => element.name == `Visitor from the Dark`)
 
-                for(const rarity in boosters[boosterIndex].cards){
-                    boosters[boosterIndex].cards[rarity].push(
-                        ...boosters[indexFire].cards[rarity],
-                        ...boosters[indexWater].cards[rarity],
-                        ...boosters[indexWind].cards[rarity],
-                        ...boosters[indexLight].cards[rarity],
-                        ...boosters[indexEarth].cards[rarity],
-                        ...boosters[indexDark].cards[rarity]
-                    )
-                }
+            for(const rarity in boosters[boosterIndex].cards){
+                boosters[boosterIndex].cards[rarity].push(
+                    ...boosters[indexFire].cards[rarity],
+                    ...boosters[indexWater].cards[rarity],
+                    ...boosters[indexWind].cards[rarity],
+                    ...boosters[indexLight].cards[rarity],
+                    ...boosters[indexEarth].cards[rarity],
+                    ...boosters[indexDark].cards[rarity]
+                )
+            }
+            boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+        }
 
-                boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+        if(boosters[boosterIndex].name == 'Taste the Attributes'){
+
+            const indexFire = boosters.findIndex(element => element.name == `Dueling with Fire`)
+            const indexWater = boosters.findIndex(element => element.name == `Raging Waters`)
+            const indexWind = boosters.findIndex(element => element.name == `A Gust of Wind`)
+            const indexLight = boosters.findIndex(element => element.name == `Light from Above`)
+            const indexEarth = boosters.findIndex(element => element.name == `Earthly Powers`)
+            const indexDark = boosters.findIndex(element => element.name == `Creeping Darkness`)
+
+            for(const rarity in boosters[boosterIndex].cards){
+                boosters[boosterIndex].cards[rarity].push(
+                    ...boosters[indexFire].cards[rarity],
+                    ...boosters[indexWater].cards[rarity],
+                    ...boosters[indexWind].cards[rarity],
+                    ...boosters[indexLight].cards[rarity],
+                    ...boosters[indexEarth].cards[rarity],
+                    ...boosters[indexDark].cards[rarity]
+                )
             }
 
-            if(boosters[boosterIndex].name == 'Taste the Attributes'){
+            boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+        }
 
-                const indexFire = boosters.findIndex(element => element.name = `Dueling with Fire`)
-                const indexWater = boosters.findIndex(element => element.name = `Raging Waters`)
-                const indexWind = boosters.findIndex(element => element.name = `A Gust of Wind`)
-                const indexLight = boosters.findIndex(element => element.name = `Light from Above`)
-                const indexEarth = boosters.findIndex(element => element.name = `Earthly Powers`)
-                const indexDark = boosters.findIndex(element => element.name = `Creeping Darkness`)
+        if(boosters[boosterIndex].name == 'Symbol 50'){
 
-                for(const rarity in boosters[boosterIndex].cards){
-                    boosters[boosterIndex].cards[rarity].push(
-                        ...boosters[indexFire].cards[rarity],
-                        ...boosters[indexWater].cards[rarity],
-                        ...boosters[indexWind].cards[rarity],
-                        ...boosters[indexLight].cards[rarity],
-                        ...boosters[indexEarth].cards[rarity],
-                        ...boosters[indexDark].cards[rarity]
-                    )
-                }
+            const index5 = boosters.findIndex(element => element.name == `Endless Thoughts`)
+            const index10 = boosters.findIndex(element => element.name == `Flip the Picture`)
+            const index15 = boosters.findIndex(element => element.name == `Equip Me`)
+            const index20 = boosters.findIndex(element => element.name == `More Eternal Memories`)
+            const index25 = boosters.findIndex(element => element.name == `Speed King`)
+            const index30 = boosters.findIndex(element => element.name == `Spice of Duel`)
+            const index35 = boosters.findIndex(element => element.name == `Fairy's Sky`)
+            const index40 = boosters.findIndex(element => element.name == `Dragon Drive`)
+            const index45 = boosters.findIndex(element => element.name == `Fiend Night`)
 
-                boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+            for(const rarity in boosters[boosterIndex].cards){
+                boosters[boosterIndex].cards[rarity].push(
+                    ...boosters[index5].cards[rarity],
+                    ...boosters[index10].cards[rarity],
+                    ...boosters[index15].cards[rarity],
+                    ...boosters[index20].cards[rarity],
+                    ...boosters[index25].cards[rarity],
+                    ...boosters[index30].cards[rarity],
+                    ...boosters[index35].cards[rarity],
+                    ...boosters[index40].cards[rarity],
+                    ...boosters[index45].cards[rarity],
+                )
             }
 
-            if(boosters[boosterIndex].name == 'Symbol 50'){
+            boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+        }
 
-                const index5 = boosters.findIndex(element => element.name = `Endless Thoughts`)
-                const index10 = boosters.findIndex(element => element.name = `Flip the Picture`)
-                const index15 = boosters.findIndex(element => element.name = `Equip Me`)
-                const index20 = boosters.findIndex(element => element.name = `More Eternal Memories`)
-                const index25 = boosters.findIndex(element => element.name = `Speed King`)
-                const index30 = boosters.findIndex(element => element.name = `Spice of Duel`)
-                const index35 = boosters.findIndex(element => element.name = `Fairy's Sky`)
-                const index40 = boosters.findIndex(element => element.name = `Dragon Drive`)
-                const index45 = boosters.findIndex(element => element.name = `Fiend Night`)
+        if(boosters[boosterIndex].name == 'Bit Players'){
 
-                for(const rarity in boosters[boosterIndex].cards){
-                    boosters[boosterIndex].cards[rarity].push(
-                        ...boosters[index5].cards[rarity],
-                        ...boosters[index10].cards[rarity],
-                        ...boosters[index15].cards[rarity],
-                        ...boosters[index20].cards[rarity],
-                        ...boosters[index25].cards[rarity],
-                        ...boosters[index30].cards[rarity],
-                        ...boosters[index35].cards[rarity],
-                        ...boosters[index40].cards[rarity],
-                        ...boosters[index45].cards[rarity],
+            for(const booster of boosters){
+                if(booster.name != 'Bit Players' && booster.name != 'Checkered Flag' 
+                    && booster.name != 'Symbol 50' && booster.name != 'Lucky Economy Pack'  && booster.name != 'Taste the Attributes')
+                    
+                    boosters[boosterIndex].cards.rares.push(
+                        ...booster.cards.rares
                     )
-                }
-
-                boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
             }
 
-            if(boosters[boosterIndex].name == 'Bit Players'){
+            boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+        }
 
-                for(const booster of boosters){
-                    if(booster.name != 'Bit Players' && booster.name != 'Checkered Flag' 
-                        && booster.name != 'Symbol 50' && booster.name != 'Lucky Economy Pack'  && booster.name != 'Taste the Attributes')
-                        
-                        boosters[boosterIndex].cards.rares.push(
-                            ...booster.cards.rares
+        if(boosters[boosterIndex].name == 'Checkered Flag'){
+
+            for(const booster of boosters){
+                if(booster.name != 'Checkered Flag' && booster.name != 'Bit Players' 
+                    && booster.name != 'Symbol 50' && booster.name != 'Lucky Economy Pack'  && booster.name != 'Taste the Attributes')
+                    
+                    for(const rarity in boosters[boosterIndex].cards){
+                        boosters[boosterIndex].cards[rarity].push(
+                            ...booster.cards[rarity]
                         )
-                }
-
-                boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+                    }
             }
 
-            if(boosters[boosterIndex].name == 'Checkered Flag'){
+            boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
+        }
 
-                for(const booster of boosters){
-                    if(booster.name != 'Checkered Flag' && booster.name != 'Bit Players' 
-                        && booster.name != 'Symbol 50' && booster.name != 'Lucky Economy Pack'  && booster.name != 'Taste the Attributes')
-                        
-                        for(const rarity in boosters[boosterIndex].cards){
-                            boosters[boosterIndex].cards[rarity].push(
-                                ...booster.cards[rarity]
-                            )
-                        }
-                }
-
-                boosters[boosterIndex].totalCards = boosters[boosterIndex].cards.ultraRares.length + boosters[boosterIndex].cards.superRares.length + boosters[boosterIndex].cards.rares.length + boosters[boosterIndex].cards.commons.length
-            }
-
-            
-            if(boosters[boosterIndex].totalCards == 0){
-                logs.push(`${boosters[boosterIndex].name} - ${boosters[boosterIndex].link}`)
-            }
+        
+        if(boosters[boosterIndex].totalCards == 0){
+            logs.push(`${boosters[boosterIndex].name} - ${boosters[boosterIndex].link}`)
         }
     }
 
+    for(const boosterIndex in boosters){
+        boosters[boosterIndex].cards = removeDuplicateCards(boosters[boosterIndex].cards)
+    }
+
     return boosters
+}
+
+const removeDuplicateCards = (cards) => {
+
+    let newCards = {}
+
+    for(const rarity in cards){
+        for(const card of cards[rarity]){
+            if(!newCards[rarity])
+                newCards[rarity] = {}
+
+            newCards[rarity][card] = card
+        }
+
+        newCards[rarity] = toArray(newCards[rarity])
+    }
+
+    return newCards
 }
 
 const main = async () => {

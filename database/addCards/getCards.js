@@ -7,6 +7,25 @@ const getPage = async (boosterLink) => {
     return response.data
 }
 
+const getCardNameFromWiki = async (cardLink) => {
+    
+    const page = await getPage(cardLink)
+    const dom = new JSDOM(page);
+
+    const $ = require('jquery')(dom.window)
+
+    let name = ''
+
+    $('.cardtablerow').each((index, element) => {
+        const language = $(element).children('.cardtablerowheader').text()
+        if(language == 'English'){
+            name = $(element).children('.cardtablerowdata').text()
+        }
+    })
+
+    return name.replaceAll('\n', '')
+}
+
 const getCards = async (boosterLink) => {
 
     const page = await getPage(boosterLink)
@@ -50,9 +69,16 @@ const getCards = async (boosterLink) => {
             }
         }else if($(element).is('ul')){
             $(element).children().each((indexCard, cardLi) => {
-                if(!Array.isArray(cards[selectedKey]))
+                if(!Array.isArray(cards[selectedKey]) && selectedKey)
                     cards[selectedKey] = []
-                cards[selectedKey].push(($(cardLi).children('a').attr('title')))
+                if(selectedKey){
+                    let name = $(cardLi).children('a').attr('title')
+
+                    if(!name)
+                        name = $(cardLi).children('span').text()
+
+                    cards[selectedKey].push(name)
+                }
             })
         }    
     })
@@ -60,4 +86,10 @@ const getCards = async (boosterLink) => {
     return cards
 }
 
-module.exports = getCards
+const main = async () => {
+    const cardName = await getCardNameFromWiki(`https://yugioh.fandom.com/wiki/M-Warrior_1`)
+    console.log(cardName)
+}
+// main()
+
+module.exports = {getCards, getCardNameFromWiki}

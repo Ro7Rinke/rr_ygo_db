@@ -50,7 +50,7 @@ const pgConfig = {
     port: 5432
 }
 
-const parseName = (name) => {
+const parseLinkName = (name) => {
     return name.replaceAll(` `, `_`)
         .replaceAll(`#`, ``)
         .replaceAll(`%`, `%25`)
@@ -95,7 +95,7 @@ const updatePicUrl = async (card) => {
 }
 
 const getImageLink = async (cardName) => {
-    const parsedCardName = parseName(cardName)
+    const parsedCardName = parseLinkName(cardName)
 
     const response = await axios.get(`https://yugioh.fandom.com/wiki/${parsedCardName}`)
     const page = response.data
@@ -120,3 +120,5 @@ const main = async () => {
 }
 
 main()
+
+module.exports = {parseLinkName}
