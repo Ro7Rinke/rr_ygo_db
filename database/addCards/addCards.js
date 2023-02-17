@@ -67,46 +67,59 @@ const insertBooster = async (booster) => {
 }
 
 const insertBoosterCard = async (boosterCard) => {
-    const client = new Client(pgConfig)
-    await client.connect()
+    try {
+        const client = new Client(pgConfig)
+        await client.connect()
 
-    let sql = `INSERT INTO booster_card VALUES($1, $2, $3, $4)`
-    let params = [
-        boosterCard.id,
-        boosterCard.cardId,
-        boosterCard.boosterId,
-        boosterCard.rarityId
-    ]
+        let sql = `INSERT INTO booster_card VALUES($1, $2, $3, $4)`
+        let params = [
+            boosterCard.id,
+            boosterCard.cardId,
+            boosterCard.boosterId,
+            boosterCard.rarityId
+        ]
 
-    const {rows} = await client.query(sql, params)
+        const {rows} = await client.query(sql, params)
 
-    client.end()
+        client.end()
 
-    if(!rows){
-        console.log(`Error inserting boosterCard\n${boosterCard}`)
+        if(!rows){
+            console.log(`Error inserting boosterCard\n${boosterCard}`)
+        }
+    } catch (error) {
+        console.log('insertBoosterCardError')
+        console.log(boosterCard)
+        console.log(error)
     }
 }
 
 const insertCard = async (card) => {
-    const client = new Client(pgConfig)
-    await client.connect()
+    try{
+        const client = new Client(pgConfig)
+        await client.connect()
 
-    let sql = `INSERT INTO card VALUES($1, $2, $3, $4, $5)`
-    let params = [
-        card.id,
-        card.ygoId,
-        card.name,
-        card.alias,
-        card.picUrl
-    ]
+        let sql = `INSERT INTO card VALUES($1, $2, $3, $4, $5)`
+        let params = [
+            card.id,
+            card.ygoId,
+            card.name,
+            card.alias,
+            card.picUrl
+        ]
 
-    const {rows} = await client.query(sql, params)
+        const {rows} = await client.query(sql, params)
 
-    client.end()
+        client.end()
 
-    if(!rows){
-        console.log(`Error into card\n${card}`)
+        if(!rows){
+            console.log(`Error into card\n${card}`)
+        }
+    }catch(error){
+        console.log('insertCard Error')
+        console.log(card)
+        console.log(error)
     }
+    
 }
 
 const getCardIdRRYGODB = async (cardName) => {
@@ -129,36 +142,38 @@ const getCardIdRRYGODB = async (cardName) => {
 
 const parseCardNameSpecial = (cardName) => {
     switch(cardName){
-        case 'De-Spell Germ Weapon':
-            return 'Virus Cannon'
-        case 'Defender of the Sea':
-            return 'Sentinel of the Seas'
-        case 'Swordsman from a Foreign Land':
-            return 'Swordsman from a Distant Land'
-        case `Dark Magician's Tome of Black Magic`:
-            return `Magic Formula`
-        case `Earthbound Spirit's Invitation`:
-            return `Call of the Earthbound`
-        case `Hidden Book of Spell`:
-            return `Hidden Spellbook`
-        case `Clone Duplication`:
-            return `Cloning`
-        case `Monster Relief`:
-            return `Relieve Monster`
-        case `Enchanted Arrow`:
-            return `Spell Shattering Arrow`
-        case `Gemini Fiend`:
-            return `Gemini Imps`
-        case `Calamity of the Wicked`:
-            return `Malevolent Catastrophe`
-        case `Skull Descovery Knight`:
-            return `Doomcaliber Knight`
-        case `Rope of Spirit`:
-            return `Soul Rope`
-        case `Rancer Dragonute`:
-            return `Lancer Dragonute`
-        case `Red-Eyes B. Dragon`:
-            return `Red-Eyes Black Dragon`
+        // case 'De-Spell Germ Weapon':
+        //     return 'Virus Cannon'
+        // case 'Defender of the Sea':
+        //     return 'Sentinel of the Seas'
+        // case 'Swordsman from a Foreign Land':
+        //     return 'Swordsman from a Distant Land'
+        // case `Dark Magician's Tome of Black Magic`:
+        //     return `Magic Formula`
+        // case `Earthbound Spirit's Invitation`:
+        //     return `Call of the Earthbound`
+        // case `Hidden Book of Spell`:
+        //     return `Hidden Spellbook`
+        // case `Clone Duplication`:
+        //     return `Cloning`
+        // case `Monster Relief`:
+        //     return `Relieve Monster`
+        // case `Enchanted Arrow`:
+        //     return `Spell Shattering Arrow`
+        // case `Gemini Fiend`:
+        //     return `Gemini Imps`
+        // case `Calamity of the Wicked`:
+        //     return `Malevolent Catastrophe`
+        // case `Skull Descovery Knight`:
+        //     return `Doomcaliber Knight`
+        // case `Rope of Spirit`:
+        //     return `Soul Rope`
+        // case `Rancer Dragonute`:
+        //     return `Lancer Dragonute`
+        // case `Red-Eyes B. Dragon`:
+        //     return `Red-Eyes Black Dragon`
+        case 'Judgment of Pharaoh':
+            return 'Judgment of the Pharaoh'
         default:
             return cardName
     }
@@ -171,7 +186,7 @@ const getCardYGO = async (cardName) => {
 
             let db = openDatabase('../ygoCDBs/cards.cdb')
     
-            let sql = `SELECT d.*, t.* from datas d inner join texts t on d.id = t.id where t.name like (?)`
+            let sql = `SELECT d.*, t.* from datas d inner join texts t on d.id = t.id where t.name = (?)`
             let params = [cardName]
             db.get(sql, params, async (error, row) => {
                 if(error){
@@ -180,19 +195,18 @@ const getCardYGO = async (cardName) => {
                 }else if(row){
                     resolve(row)
                 }else{
-                    const wikiName = await getCardNameFromWiki(`${domain}/wiki/${cardName}`)
-                    console.log(cardName, ' - ', wikiName)
-                    db.get(sql, [wikiName], (error, row) => {
+                    let dbUnofficial = openDatabase('../ygoCDBs/cards-unofficial.cdb')
+                    dbUnofficial.get(sql, params, async (error, row) => {
                         if(error){
                             console.log(error)
                             reject(error)
                         }else if(row){
                             resolve(row)
                         }else{
-                            logs.push(`${cardName} - Não achou.`)
-                            reject(`can't find card: ${cardName}`)      
+                            resolve(null)
                         }
                     })
+                    // reject(`can't find card: ${cardName}`)
                 }
             })
         }catch(error){
@@ -201,12 +215,30 @@ const getCardYGO = async (cardName) => {
     })
 }
 
+
+// const wikiName = await getCardNameFromWiki(`${domain}/wiki/${cardName}`)
+// console.log(cardName, ' - ', wikiName)
+// db.get(sql, [wikiName], (error, row) => {
+//     if(error){
+//         console.log(error)
+//         reject(error)
+//     }else if(row){
+//         resolve(row)
+//     }else{
+//         logs.push(`${cardName} - Não achou.`)
+//         reject(`can't find card: ${cardName}`)      
+//     }
+// })
+
 const getCardId = async (cardName) => {
     let cardId = await getCardIdRRYGODB(cardName)
+
     if(!cardId){
         try {
-            const cardYgo = await getCardYGO(cardName)
+            let cardYgo = await getCardYGO(cardName)
+
             if(cardYgo){
+
                 cardId = short.generate()
                 await insertCard({
                     id: cardId,
@@ -216,6 +248,45 @@ const getCardId = async (cardName) => {
                     picUrl: ''
                     //text: cardYgo.text
                 })
+
+                // cardId = await getCardIdRRYGODB(cardName)
+
+                // if(cardId){
+                //     return cardId
+                // }else{
+                //     cardYgo = await getCardYGO(cardName)
+
+                //     if(cardYgo){
+                //         cardId = short.generate()
+                //         await insertCard({
+                //             id: cardId,
+                //             ygoId: cardYgo.id,
+                //             name: cardYgo.name,
+                //             alias: cardName,
+                //             picUrl: ''
+                //             //text: cardYgo.text
+                //         })
+                //     }
+                // }
+            }else{
+                const wikiName = await getCardNameFromWiki(`${domain}/wiki/${cardName}`)
+
+                cardId = await getCardIdRRYGODB(wikiName)
+
+                if(!cardId){
+                    cardYgo = await getCardYGO(wikiName)
+                    if(cardYgo){
+                        cardId = short.generate()
+                        await insertCard({
+                            id: cardId,
+                            ygoId: cardYgo.id,
+                            name: cardYgo.name,
+                            alias: wikiName,
+                            picUrl: ''
+                            //text: cardYgo.text
+                        })
+                    }
+                }
             }
             // else{
             //     console.log("can't find card - ", cardName)
