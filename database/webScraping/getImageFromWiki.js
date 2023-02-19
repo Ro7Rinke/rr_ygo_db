@@ -55,6 +55,7 @@ const parseLinkName = (name) => {
         .replaceAll(`#`, ``)
         .replaceAll(`%`, `%25`)
         .replaceAll(`'`, `%27`)
+        .replaceAll(`?`,`%3F`)
 }
 
 const getCards = async () => {
@@ -64,7 +65,7 @@ const getCards = async () => {
     let sql = `SELECT id, name, alias FROM card`
     let params = []
 
-    const {rows} = await client.query(sql, params)
+    const { rows } = await client.query(sql, params)
 
     client.end()
 
@@ -81,7 +82,7 @@ const updatePicUrl = async (card) => {
 
 
     let sql = `UPDATE CARD SET pic_url = $1 WHERE id = $2`
-    let params = [card.picUrl, card.Id]
+    let params = [card.picUrl, card.id]
 
     const {rows} = await client.query(sql, params)
     
@@ -103,21 +104,36 @@ const getImageLink = async (cardName) => {
 
     const indexImageLine = pageLines.findIndex(line => line.includes(`class="cardtable-cardimage"`))
 
-    return getFromBetween.get(pageLines[indexImageLine], `<a href="`, `" class="image"`)
+    if(indexImageLine >= 0 && pageLines[indexImageLine])
+        return getFromBetween.get(pageLines[indexImageLine], `<a href="`, `" class="image"`)[0]
+    else
+        return null
 }
 
 
 
 const main = async () => {
-    const cards = getCards()
+    const cards = await getCards()
 
     for(const card of cards){
-        let imageLink = await getImageLink(card.name)
-        if(!imageLink)
-            imageLink = await getImageLink(card.alias)
+        // if(card.name == 'Level Down!?'){
 
-        console.log(imageLink)
-        updatePicUrl({...card, picUrl: imageLink})
+            let imageLink = await getImageLink(card.name)
+
+            if(!imageLink)
+                imageLink = await getImageLink(card.alias)
+
+            if(!imageLink)
+                imageLink = await getImageLink(`${card.name} (card)`)
+
+            if(!imageLink)
+                imageLink = await getImageLink(`${card.alias} (card)`)
+
+            if(!imageLink)
+                console.log(`Can't get link\nName: ${card.name}\nAlias: ${card.alias}\n`)
+
+            updatePicUrl({...card, picUrl: imageLink})
+        // }
     }
 }
 
