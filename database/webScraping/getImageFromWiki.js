@@ -61,7 +61,7 @@ const getCards = async () => {
     const client = new Client(pgConfig)
     await client.connect()
 
-    let sql = `SELECT id, name FROM card`
+    let sql = `SELECT id, name, alias FROM card`
     let params = []
 
     const {rows} = await client.query(sql, params)
@@ -112,7 +112,9 @@ const main = async () => {
     const cards = getCards()
 
     for(const card of cards){
-        const imageLink = await getImageLink(card.name)
+        let imageLink = await getImageLink(card.name)
+        if(!imageLink)
+            imageLink = await getImageLink(card.alias)
 
         console.log(imageLink)
         updatePicUrl({...card, picUrl: imageLink})

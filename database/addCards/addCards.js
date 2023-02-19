@@ -42,27 +42,34 @@ const openDatabase = (path) => {
 }
 
 const insertBooster = async (booster) => {
-    const client = new Client(pgConfig)
-    await client.connect()
+    try {
+        const client = new Client(pgConfig)
+        await client.connect()
 
-    let sql = `INSERT INTO booster VALUES($1, $2, $3, $4, $5, $6, $7, $8)`
-    let params = [
-        booster.id,
-        booster.name,
-        booster.gameId,
-        booster.coverCardId,
-        booster.price,
-        booster.cardsPerPack,
-        booster.packNumber,
-        booster.unlockInfo
-    ]
+        let sql = `INSERT INTO booster VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+        let params = [
+            booster.id,
+            booster.name,
+            booster.gameId,
+            booster.coverCardId,
+            booster.price,
+            booster.cardsPerPack,
+            booster.totalCards,
+            booster.packNumber,
+            booster.unlockInfo
+        ]
 
-    const {rows} = await client.query(sql, params)
+        const {rows} = await client.query(sql, params)
 
-    client.end()
+        client.end()
 
-    if(!rows){
-        console.log(`Error inserting booster\n${booster}`)
+        if(!rows){
+            console.log(`Error inserting booster\n${booster}`)
+        }
+    } catch (error) {
+        console.log('insertBoosterError')
+        console.log(booster)
+        console.log(error)
     }
 }
 
@@ -90,6 +97,7 @@ const insertBoosterCard = async (boosterCard) => {
         console.log('insertBoosterCardError')
         console.log(boosterCard)
         console.log(error)
+        throw error
     }
 }
 
@@ -123,6 +131,7 @@ const insertCard = async (card) => {
 }
 
 const getCardIdRRYGODB = async (cardName) => {
+    cardName = parseCardNameSpecial(cardName)
     const client = new Client(pgConfig)
     await client.connect()
 
@@ -174,6 +183,16 @@ const parseCardNameSpecial = (cardName) => {
         //     return `Red-Eyes Black Dragon`
         case 'Judgment of Pharaoh':
             return 'Judgment of the Pharaoh'
+        case `Parasite Ticky`:
+            return `Parasitic Ticky`
+        case `Arcana Force XII - The Hanged Man`:
+            return `Arcana Force XII - The Hangman`
+        case `Alchemic Kettle - Chaos Distill`:
+            return `Chaos Distill`
+        case `Cupid Kiss`:
+            return `Cupid's Kiss`
+        case `LaLa Li-Oon`:
+            return `LaLa Li-oon`
         default:
             return cardName
     }
@@ -296,6 +315,8 @@ const getCardId = async (cardName) => {
             console.log(error)
         }
     }
+    if(!cardId)
+        console.log(`Can't get cardId of ${cardName}`)
     return cardId
 }
 
@@ -347,10 +368,11 @@ const insertBoostersInfo = async () => {
         await insertBooster({
             id: boosterId,
             name: booster.name,
-            gameId: getGameId(booster.name),
+            gameId: getGameId(booster.game),
             coverCardId: null,
             price: booster.price,
             cardsPerPack: booster.cardsPerPack,
+            totalCards: booster.totalCards,
             packNumber: booster.packNumber,
             unlockInfo: booster.unlockInfo
         })
@@ -363,8 +385,13 @@ const insertBoostersInfo = async () => {
                     boosterId,
                     rarityId: getRarityId(key)
                 }
-
-                await insertBoosterCard(boosterCard)
+                try {
+                    await insertBoosterCard(boosterCard)    
+                } catch (error) {
+                    console.log('insertboosterCardError2')
+                    console.log(cardName)
+                }
+                
             }
         }
     }
