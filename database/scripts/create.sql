@@ -22,9 +22,9 @@ create table if not exists booster (
 	cover_card_id varchar(22),
 	price decimal not null,
 	cards_per_pack int not null,
+	total_cards int not null,
 	pack_number int,
 	unlock_info varchar(1000) not null,
-	total_cards int not null,
 	foreign key(game_id) references game(id),
 --	foreign key(cover_card_name) references card(name),
 	foreign key(cover_card_id) references card(id)
